@@ -1,0 +1,19 @@
+Task 1: Write a Custom Autograd Function with Second-Order Gradients (grad of grad)Objective: Implement a custom torch.autograd.Function that performs a non-trivial mathematical operation and correctly supports backpropagation through the second derivative (Hessian-vector products) without leaking memory or breaking the dynamic tape.Problem:
+Write a custom PyTorch autograd function for the Log-Sum-Exp stabilization trick with a twist: compute a custom forward pass and explicitly define both first-order and second-order backward passes for an input tensor $x$ where you need $\frac{\partial^2 L}{\partial x^2}$. Ensure it handles batched inputs and does not use native torch.logsumexp.Pythonimport torch
+
+class CustomLogSumExp(torch.autograd.Function):
+    @staticmethod
+    def forward(ctx, x):
+        # TODO: Implement forward pass stably
+        raise NotImplementedError
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        # TODO: Implement analytical gradients supporting higher-order backward
+        raise NotImplementedError
+Task 2: Zero-Memory-Overhead Gradient Accumulation with Fused OptimizersObjective: Write a custom training loop optimization step that performs gradient accumulation across micro-batches without allocating extra GPU memory for intermediate .grad buffers or scaling factors, using raw pointer manipulation or torch.compiler / torch._foreach APIs.Problem:
+Given a large model that OOMs (Out of Memory) during standard backward passes with accumulation, write a plain PyTorch snippet using torch.no_grad() and low-level tensor buffer manipulation that accumulates gradients directly into a pre-allocated low-precision (FP16/BF16) master weight buffer while performing stochastic rounding.
+
+Task 3: Dynamic Control Flow Custom CUDA/C++ Extension Integration via torch.utils.cpp_extensionObjective: Write a custom inline C++/CUDA kernel extension loaded dynamically via PyTorch that performs a masked ragged-tensor softmax reduction, complete with a custom PyTorch wrapper that handles ragged batch offsets dynamically on GPU without padding overhead.Problem:
+Create a JIT-compiled C++/CUDA extension fragment using torch.utils.cpp_extension.load_inline that takes a flattened 1D value tensor and a 1D boundary index tensor (representing variable-length sequences), computes softmax in-place within each segment, and returns the result while handling thread-block synchronization for varying segment lengths.
+
